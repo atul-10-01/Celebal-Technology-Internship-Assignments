@@ -42,7 +42,7 @@ The app will be available at `http://localhost:5173` by default.
 ![Dashboard Overview](public/dashboard-preview.png)
 
 ### Graphs & Charts
-![Graphs](public/graphs and charts.png)
+![Graphs](public/graphsandcharts.png)
 
 ### Calender
 ![Calender](public/calender.png)
