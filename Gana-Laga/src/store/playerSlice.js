@@ -44,16 +44,46 @@ const playerSlice = createSlice({
       state.repeat = !state.repeat;
     },
     nextSong: (state) => {
-      if (state.currentIndex < state.queue.length - 1) {
+      if (state.shuffle) {
+        // Random song logic for shuffle
+        const randomIndex = Math.floor(Math.random() * state.queue.length);
+        state.currentIndex = randomIndex;
+        state.currentSong = state.queue[randomIndex];
+      } else if (state.currentIndex < state.queue.length - 1) {
         state.currentIndex += 1;
         state.currentSong = state.queue[state.currentIndex];
+      } else if (state.repeat) {
+        // If repeat is on, go to first song
+        state.currentIndex = 0;
+        state.currentSong = state.queue[0];
       }
+      // Reset time for new song
+      state.currentTime = 0;
     },
     previousSong: (state) => {
-      if (state.currentIndex > 0) {
+      if (state.shuffle) {
+        // Random song logic for shuffle
+        const randomIndex = Math.floor(Math.random() * state.queue.length);
+        state.currentIndex = randomIndex;
+        state.currentSong = state.queue[randomIndex];
+      } else if (state.currentIndex > 0) {
         state.currentIndex -= 1;
         state.currentSong = state.queue[state.currentIndex];
+      } else if (state.repeat) {
+        // If repeat is on, go to last song
+        state.currentIndex = state.queue.length - 1;
+        state.currentSong = state.queue[state.currentIndex];
       }
+      // Reset time for new song
+      state.currentTime = 0;
+    },
+    playSong: (state, action) => {
+      const { song, queue, index } = action.payload;
+      state.currentSong = song;
+      state.queue = queue || [song];
+      state.currentIndex = index || 0;
+      state.isPlaying = true;
+      state.currentTime = 0;
     },
   },
 });
@@ -70,6 +100,7 @@ export const {
   toggleRepeat,
   nextSong,
   previousSong,
+  playSong,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

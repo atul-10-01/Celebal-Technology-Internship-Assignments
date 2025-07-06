@@ -2,16 +2,34 @@ import { mockSongs, mockPlaylists } from '../data/mockData';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import { HiPlay, HiHeart, HiDotsHorizontal } from 'react-icons/hi';
+import { useDispatch } from 'react-redux';
+import { playSong } from '../store/playerSlice';
 
 const HomePage = () => {
+  const dispatch = useDispatch();
+  
   const handlePlaySong = (song) => {
-    console.log('Playing song:', song.title);
-    // Will implement actual play functionality in Step 3
+    // Get the current song's index in the mockSongs array
+    const currentIndex = mockSongs.findIndex(s => s.id === song.id);
+    
+    // Dispatch the playSong action with the song, full queue, and current index
+    dispatch(playSong({
+      song: song,
+      queue: mockSongs,
+      index: currentIndex
+    }));
   };
 
   const handlePlayPlaylist = (playlist) => {
-    console.log('Playing playlist:', playlist.name);
-    // Will implement actual play functionality in Step 3
+    // For playlists, we'll use the mockSongs as the queue and start with the first song
+    const firstSong = mockSongs[0];
+    if (firstSong) {
+      dispatch(playSong({
+        song: firstSong,
+        queue: mockSongs,
+        index: 0
+      }));
+    }
   };
 
   return (

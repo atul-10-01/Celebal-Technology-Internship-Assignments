@@ -1,5 +1,6 @@
 import Sidebar from './Sidebar';
 import Header from './Header';
+import MusicPlayer from '../Player/MusicPlayer';
 
 const Layout = ({ children }) => {
   return (
@@ -26,6 +27,9 @@ const Layout = ({ children }) => {
           </div>
         </main>
       </div>
+      
+      {/* Music Player */}
+      <MusicPlayer />
     </div>
   );
 };
