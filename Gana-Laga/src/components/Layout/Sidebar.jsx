@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { 
   HiHome, 
   HiSearch, 
@@ -12,7 +13,10 @@ import {
 } from 'react-icons/hi';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const playlists = useSelector(state => state.library?.playlists) || [];
+  
   const navigation = [
     { name: 'Home', href: '/', icon: HiHome },
     { name: 'Search', href: '/search', icon: HiSearch },
@@ -99,7 +103,13 @@ const Sidebar = () => {
                 <li key={item.name}>
                   <NavLink
                     to={item.href}
-                    className="flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-gray-800/50 transition-all duration-200 text-gray-300 hover:text-white group"
+                    className={({ isActive }) =>
+                      `flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-gray-800/50 transition-all duration-200 group ${
+                        isActive 
+                          ? 'bg-gradient-to-r from-green-500/20 to-green-600/10 text-green-400 border-l-4 border-green-500' 
+                          : 'text-gray-300 hover:text-white'
+                      }`
+                    }
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <item.icon className="h-5 w-5 flex-shrink-0 group-hover:text-green-400 transition-colors" />
@@ -112,38 +122,60 @@ const Sidebar = () => {
         </div>
 
         {/* Playlists */}
-        <div className="flex-1 px-4 mt-6 overflow-y-auto">
+        <div className="flex-1 px-4 mt-6 overflow-y-auto custom-scrollbar">
           <div className="space-y-2">
             <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 px-4">
-              Recently Created
+              Your Playlists
             </div>
             <div className="space-y-1">
-              {[
-                { name: "My Playlist #1", songs: 23 },
-                { name: "Chill Vibes", songs: 45 },
-                { name: "Rock Classics", songs: 67 },
-                { name: "Workout Mix", songs: 34 },
-                { name: "Study Music", songs: 28 },
-                { name: "Road Trip", songs: 52 }
-              ].map((playlist, index) => (
-                <div key={index} className="group px-4 py-3 hover:bg-gray-800/30 rounded-xl cursor-pointer transition-all duration-200">
+              {playlists.slice(0, 8).map((playlist) => (
+                <div 
+                  key={playlist.id} 
+                  className="group px-4 py-3 hover:bg-gray-800/30 rounded-xl cursor-pointer transition-all duration-200"
+                  onClick={() => {
+                    navigate(`/playlist/${playlist.id}`);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-gray-500 group-hover:to-gray-700 transition-all">
-                      <span className="text-white text-xs font-bold">
-                        {playlist.name.charAt(0)}
-                      </span>
+                    <div className="w-10 h-10 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-gray-500 group-hover:to-gray-700 transition-all overflow-hidden">
+                      {playlist.image ? (
+                        <img src={playlist.image} alt={playlist.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-white text-xs font-bold">
+                          {playlist.name.charAt(0)}
+                        </span>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-white font-medium text-sm truncate group-hover:text-green-400 transition-colors">
                         {playlist.name}
                       </p>
                       <p className="text-gray-500 text-xs">
-                        {playlist.songs} songs
+                        {playlist.songs?.length || 0} songs
                       </p>
                     </div>
                   </div>
                 </div>
               ))}
+              
+              {playlists.length > 8 && (
+                <div 
+                  className="px-4 py-2 text-sm text-green-400 hover:text-green-300 cursor-pointer"
+                  onClick={() => {
+                    navigate('/library');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  See all playlists
+                </div>
+              )}
+              
+              {playlists.length === 0 && (
+                <div className="px-4 py-3 text-sm text-gray-400">
+                  No playlists yet. Create one to get started!
+                </div>
+              )}
             </div>
           </div>
         </div>

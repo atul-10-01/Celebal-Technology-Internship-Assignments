@@ -194,6 +194,93 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Trending Now */}
+      <section className="mb-10">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">Trending now</h2>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+            See all
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {mockSongs.slice(1, 5).map((song) => (
+            <div
+              key={song.id}
+              className="group bg-gradient-to-br from-gray-800/40 to-gray-900/60 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-700/20 shadow-xl"
+              onClick={() => handlePlaySong(song)}
+            >
+              <div className="relative mb-4">
+                <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-lg">
+                  Trending
+                </div>
+                <img
+                  src={song.image}
+                  alt={song.title}
+                  className="w-full aspect-square rounded-xl object-cover shadow-2xl"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
+                
+                {/* Play Button Overlay */}
+                <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-3 group-hover:translate-y-0">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="!rounded-full w-12 h-12 !p-0 shadow-xl hover:scale-110 transition-transform duration-200"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlaySong(song);
+                    }}
+                  >
+                    <HiPlay className="h-4 w-4 ml-0.5" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <h3 className="font-bold text-white text-base truncate group-hover:text-green-400 transition-colors">
+                  {song.title}
+                </h3>
+                <p className="text-gray-400 text-sm truncate">{song.artist}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Recently Played */}
+      <section className="mb-10">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">Recently played</h2>
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+            See all
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {mockPlaylists.map((playlist) => (
+            <div
+              key={playlist.id}
+              className="group bg-gradient-to-br from-gray-800/40 to-gray-900/60 p-4 rounded-xl backdrop-blur-sm cursor-pointer transition-all duration-300 hover:bg-gray-800/60 hover:scale-[1.03] border border-gray-700/30"
+              onClick={() => handlePlayPlaylist(playlist)}
+            >
+              <div className="relative mb-4">
+                <img 
+                  src={playlist.image}
+                  alt={playlist.name}
+                  className="w-full aspect-square object-cover rounded-lg shadow-lg"
+                />
+                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button className="bg-green-500 text-black rounded-full p-2 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                    <HiPlay className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+              <h3 className="font-bold text-white truncate group-hover:text-green-400 transition-colors">{playlist.name}</h3>
+              <p className="text-sm text-gray-400 truncate mt-1">{playlist.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

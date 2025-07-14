@@ -5,6 +5,9 @@ import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 import TestPage from './pages/TestPage';
+import LibraryPage from './pages/LibraryPage';
+import AlbumPage from './pages/AlbumPage';
+import PlaylistPage from './pages/PlaylistPage';
 
 function App() {
   return (
@@ -16,8 +19,10 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/test" element={<TestPage />} />
-              <Route path="/library" element={<div className="text-white">Library Page - Coming Soon</div>} />
-              <Route path="/create-playlist" element={<div className="text-white">Create Playlist - Coming Soon</div>} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/album/:id" element={<AlbumPage />} />
+              <Route path="/playlist/:id" element={<PlaylistPage />} />
+              <Route path="/create-playlist" element={<LibraryPage />} />
               <Route path="/liked-songs" element={<div className="text-white">Liked Songs - Coming Soon</div>} />
               <Route path="/downloaded" element={<div className="text-white">Downloaded - Coming Soon</div>} />
             </Routes>

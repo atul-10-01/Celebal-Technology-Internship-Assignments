@@ -21,6 +21,7 @@ import {
   toggleShuffle,
   toggleRepeat
 } from '../../store/playerSlice';
+import { toggleLikeSong, addToRecentlyPlayed } from '../../store/librarySlice';
 import { useState, useRef, useEffect } from 'react';
 import ProgressBar from './ProgressBar';
 import VolumeControl from './VolumeControl';
@@ -29,10 +30,13 @@ import QueueManager from './QueueManager';
 const MusicPlayer = () => {
   const dispatch = useDispatch();
   const { currentSong, isPlaying, shuffle, repeat, volume } = useSelector(state => state.player);
+  const likedSongs = useSelector(state => state.library?.likedSongs) || [];
   
   const audioRef = useRef(null);
-  const [isLiked, setIsLiked] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
+  
+  // Check if the current song is liked
+  const isLiked = currentSong ? likedSongs.includes(currentSong.id) : false;
 
   // Handle play/pause
   const togglePlayPause = () => {
@@ -66,6 +70,13 @@ const MusicPlayer = () => {
   const handleSongEnd = () => {
     dispatch(nextSong());
   };
+  
+  // Toggle like song
+  const handleToggleLike = () => {
+    if (currentSong) {
+      dispatch(toggleLikeSong(currentSong.id));
+    }
+  };
 
   // Update audio volume when volume state changes
   useEffect(() => {
@@ -78,8 +89,13 @@ const MusicPlayer = () => {
   useEffect(() => {
     if (currentSong && audioRef.current && isPlaying) {
       audioRef.current.play();
+      
+      // Add to recently played when a song starts playing
+      if (currentSong.id) {
+        dispatch(addToRecentlyPlayed(currentSong.id));
+      }
     }
-  }, [currentSong]);
+  }, [currentSong, isPlaying, dispatch]);
 
   if (!currentSong) return null;
 
@@ -112,7 +128,7 @@ const MusicPlayer = () => {
             </p>
           </div>
           <button
-            onClick={() => setIsLiked(!isLiked)}
+            onClick={handleToggleLike}
             className="text-gray-400 hover:text-green-500 transition-colors hidden sm:block p-1"
           >
             {isLiked ? (
