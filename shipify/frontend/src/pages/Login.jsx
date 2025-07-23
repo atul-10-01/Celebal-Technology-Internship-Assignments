@@ -1,23 +1,37 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { login } from '../api'
+import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const { setUser, setToken } = useAuth()
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value })
     setError('')
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     if (!form.email || !form.password) {
       setError('Both fields are required')
       return
     }
-    // TODO: Integrate with backend
-    alert('Login successful! (UI only)')
+    setLoading(true)
+    const res = await login(form)
+    setLoading(false)
+    if (res.token) {
+      setToken(res.token)
+      setUser(res.user)
+      navigate('/dashboard')
+    } else {
+      setError(res.message || 'Login failed')
+    }
   }
 
   return (
@@ -33,7 +47,9 @@ export default function Login() {
           <label className="block mb-1 font-medium">Password</label>
           <input type="password" name="password" value={form.password} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Login</button>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       <div className="mt-4 text-center text-sm">
         Don&apos;t have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
