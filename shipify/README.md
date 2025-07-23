@@ -1,6 +1,6 @@
 # Shipify - Shipment Delivery Application
 
-![Home Page](./Home%20Page.png)
+![Home Page](./HomePage.png)
 
 ## Overview
 Shipify is a full-stack shipment delivery application that enables users to manage shipments and track their delivery status. It features user registration, login, personalized dashboards, shipment creation, and real-time tracking—all with a modern, responsive UI.
