@@ -47,7 +47,7 @@ Shipify is a full-stack shipment delivery application that enables users to mana
 ## Screenshots
 
 ### Home Page
-![Home Page](./Home%20Page.png)
+![Home Page](./HomePage.png)
 
 ### Dashboard
 ![Dashboard](./dashboard.png)
